@@ -2,6 +2,8 @@
 
 Generate CSS clamp values to transition between two sizes at specific viewport widths.
 
+Check out the online calculator: [https://clampcalc.netlify.app](https://clampcalc.netlify.app)
+
 ## Wut?
 
 So you know [`clamp`](https://developer.mozilla.org/en-US/docs/Web/CSS/clamp), right? Give it a minimum size, a maximum size plus a preferred size and it'll use the preferred size where it can, limiting the size to the minimum and maximum values you give it.
