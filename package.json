@@ -1,0 +1,15 @@
+{
+  "name": "clampcalc",
+  "version": "0.0.0",
+  "description": "Generate CSS clamp values to transition between two sizes at specific viewport widths",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "CSS",
+    "clamp"
+  ],
+  "author": "nick.pearson@york.ac.uk",
+  "license": "MIT"
+}
