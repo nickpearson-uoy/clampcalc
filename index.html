@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en-GB">
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<title>clampcalc</title>
+
+		<style>
+
+			/* -------------------------------------------------- */
+
+			:root
+			{
+				--background: #00ff7f;
+				--text: #154975;
+				--highlight: #F00066;
+				--focus: dodgerblue;
+			}
+
+			/* -------------------------------------------------- */
+
+			*, *::before, *::after { box-sizing: border-box; }
+
+			body
+			{
+				padding: 1em;
+				margin: 0;
+
+				min-height: 100vh;
+				display: flex;
+				flex-flow: column nowrap;
+				justify-content: center;
+
+				font-size: clamp( 0.8em , calc( 1.16vw + 0.56em ) , 1.5em );
+				font-family: -apple-system , BlinkMacSystemFont , 'Segoe UI' , Roboto , Oxygen-Sans , Ubuntu , Cantarell , sans-serif;
+				line-height: 1.5;
+
+				background: var( --background );
+				color: var( --text );
+			}
+
+			/* -------------------------------------------------- */
+
+			main
+			{
+				width: 100%;
+				max-width: 36em;
+				margin: 0 auto;
+			}
+
+			h1
+			{
+				margin-top: 0;
+				font-size: 4em;
+			}
+
+			/* -------------------------------------------------- */
+
+			button,
+			input
+			{
+				font-size: inherit;
+				font-family: inherit;
+				line-height: inherit;
+
+				border: none;
+				border-radius: 0.3rem;
+			}
+
+			input
+			{
+				min-width: calc( 2.5em + 20px );
+				width: 100%;
+
+				padding: 0.5rem;
+
+				font-size: 1.5em;
+
+				text-align: right;
+				color: var( --text );
+			}
+
+			code
+			{
+				display: inline-block;
+				padding: 1rem 1.5rem;
+
+				background: white;
+				box-shadow: inset 0.1rem 0.2rem 0.3rem rgba( 0,0,0 , 0.2 );
+				border-radius: 0.3rem;
+			}
+
+			/* -------------------------------------------------- */
+
+			button
+			{
+				padding: 1rem 1.5rem;
+
+				white-space: nowrap;
+
+				background: var( --highlight );
+				color: white;
+
+				box-shadow:
+					0.05rem 0.1rem 0 #BE0051,
+					0.10rem 0.2rem 0 #BE0051,
+					0.15rem 0.3rem 0.2rem rgba( 0,0,0 , 0.2 );
+
+				transform: translate( -0.1rem , -0.2rem );
+
+				transition:
+					transform ease-out 300ms,
+					box-shadow ease-out 300ms;
+
+				backface-visibility: hidden;
+			}
+
+			button:hover
+			{
+				transform: translate( -0.15rem , -0.3rem );
+
+				box-shadow:
+					0.075rem 0.15rem 0 #BE0051,
+					0.150rem 0.30rem 0 #BE0051,
+					0.3rem 0.6rem 0.2rem rgba( 0,0,0 , 0.2 );
+
+				transition-duration: 50ms;
+
+				transition:
+					box-shadow cubic-bezier( 0.4,2 , 0.8,1 ) 300ms,
+	            	transform cubic-bezier( 0.4,2 , 0.8,1 ) 300ms;
+			}
+
+			button:active
+			{
+				transform: translate( 0 , 0 );
+
+				box-shadow:
+					0 0 0 #BE0051,
+					0 0 0 #BE0051,
+					0.1rem 0.2rem 1px rgba( 0,0,0 , 0.2 );
+
+				transition-duration: 10ms;
+			}
+
+			/* -------------------------------------------------- */
+
+			:focus-visible
+			{
+				outline: 4px solid var( --focus );
+				outline-offset: -2px;
+			}
+
+			/* -------------------------------------------------- */
+
+			.form
+			{
+				display: flex;
+				flex-flow: row nowrap;
+				gap: 0.75rem;
+				align-items: flex-end;
+
+				padding: 1rem 1.5rem;
+
+				overflow: auto;
+
+				background: var( --text );
+				color: white;
+
+				box-shadow: 0.2rem 0.4rem 0.2rem rgba( 0,0,0 , 0.2 );
+				border-radius: 0.3rem;
+			}
+
+			.field
+			{
+				flex-grow: 1;
+			}
+
+			.label
+			{
+				color: var( --background );
+			}
+
+			.input
+			{
+				display: flex;
+				flex-flow: row nowrap;
+				align-items: baseline;
+				gap: 0.5rem;
+			}
+
+			.separator
+			{
+				font-size: 2em;
+				padding: 0.2rem 0;
+			}
+
+			/* -------------------------------------------------- */
+
+			@media screen and ( min-width: 20em )
+			{
+				.results
+				{
+					display: flex;
+					flex-flow: row nowrap;
+					gap: 1rem;
+
+					align-items: flex-start;
+				}
+
+				.output
+				{
+					flex-grow: 1;
+				}
+			}
+
+			/* -------------------------------------------------- */
+
+			.feedback { display: inline-grid; }
+
+			.feedback > *
+			{
+				grid-row-start: 1;
+				grid-column-start: 1;
+			}
+
+			/* Inert state */
+
+			.feedback .inert { opacity: 1; }
+			.feedback .active { opacity: 0; }
+
+			.feedback .inert,
+			.feedback .active { transition: opacity 500ms ease; }
+
+			/* Active state */
+
+			.feedback.confirm .active { opacity: 1; }
+			.feedback.confirm .inert { opacity: 0; }
+
+			.feedback.confirm .inert,
+			.feedback.confirm .active { transition: none; }
+
+			/* -------------------------------------------------- */
+
+		</style>
+
+</head>
+<body>
+
+	<main>
+
+		<h1>clampcalc</h1>
+			<p>Generate CSS clamp values to transition between two sizes at specific viewport widths.</p>
+
+			<div id="calculator">
+				<h2>Parameters</h2>
+				<form class="form">
+
+					<label class="field">
+						<div class="label"><abbr title="Lower size">Ls</abbr></div>
+						<div class="input"><input name="Ls" class="ls_input" type="number"> em</div>
+					</label>
+
+					<span class="separator">@</span>
+
+					<label class="field">
+						<div class="label"><abbr title="Lower viewport width">Lvw</abbr></div>
+						<div class="input"><input name="Lvw" class="lvw_input" type="number"> em</div>
+					</label>
+
+					<span class="separator">/</span>
+
+					<label class="field">
+						<div class="label"><abbr title="Upper size">Us</abbr></div>
+						<div class="input"><input name="Us" class="us_input" type="number"> em</div>
+					</label>
+
+					<span class="separator">@</span>
+
+					<label class="field">
+						<div class="label"><abbr title="Upper viewport width">Uvw</abbr></div>
+						<div class="input"><input name="Uvw" class="uvw_input" type="number"> em</div>
+					</label>
+
+				</form>
+				<h2>Result</h2>
+				<p class="results">
+					<code class="output">clamp( Lsem , calc( Avw + Bem ) , Usem )</code>
+					<button class="copy">Copy <span class="feedback" aria-hidden><span class="inert">📋</span><span class="active">👍</span></span></button>
+				</p>
+			</div>
+
+		</main>
+
+		<script>
+
+			// --------------------------------------------------
+
+			function clampcalc( Ls , Lvw , Us , Uvw )
+			{
+				var a = ( 100 * ( Us - Ls ) ) / ( Uvw - Lvw );
+				var b = ( ( Lvw * Us ) - ( Uvw * Ls ) ) / ( Lvw - Uvw );
+
+				a = Math.floor( a * 100 ) / 100;
+				b = Math.floor( b * 100 ) / 100;
+
+				return `clamp( ${ Ls }em , calc( ${ a }vw + ${ b }em ) , ${ Us }em )`;
+			}
+
+			// --------------------------------------------------
+
+			function update()
+			{
+				var ls  = $ls_input.value;
+				var lvw = $lvw_input.value;
+				var us  = $us_input.value;
+				var uvw = $uvw_input.value;
+
+				$output.innerHTML = clampcalc( ls , lvw , us , uvw );
+			}
+
+			// --------------------------------------------------
+
+			function copy()
+			{
+				navigator.clipboard.writeText( $output.innerHTML );
+
+				$feedback.classList.add( 'confirm' );
+
+				clearTimeout( timeout );
+
+				timeout = setTimeout( function(){ $feedback.classList.remove( 'confirm' ); } , 3000 );
+			}
+
+			// --------------------------------------------------
+
+			// Container
+			var $calculator = document.getElementById( 'calculator' );
+
+			// All the parameter inputs
+			var $ls_input  = $calculator.querySelector( '.ls_input'  );
+			var $lvw_input = $calculator.querySelector( '.lvw_input' );
+			var $us_input  = $calculator.querySelector( '.us_input'  );
+			var $uvw_input = $calculator.querySelector( '.uvw_input' );
+
+			// Output container
+			var $output = $calculator.querySelector( '.output' );
+
+			// Copy-to-clipboard button
+			var $copy = $calculator.querySelector( '.copy' );
+			var $feedback = $copy.querySelector( '.feedback' );
+
+			// Timeout for button feedback
+			var timeout = null;
+
+			// Initial state
+			update();
+
+			// Add a listener for any updates to inputs inside the calculator
+			$calculator.addEventListener( 'input' , update );
+
+			// Add a listener for the "copy to clipboard" button
+			$copy.addEventListener( 'click' , copy );
+
+			// --------------------------------------------------
+
+		</script>
+
+	</body>
+</html>
