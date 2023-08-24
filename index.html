@@ -5,7 +5,8 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<title>clampcalc</title>
+		<title>Clampcalc | Accurate tweening with CSS clamp</title>
+		<meta name="description" content="Generate CSS clamp values to transition between two sizes at specific viewport widths.">
 
 		<style>
 
@@ -13,10 +14,18 @@
 
 			:root
 			{
-				--background: #00ff7f;
-				--text: #154975;
+				--background: #a5f800;
+				--background-alt: #DDFF33;
+
+				--text: #47008F;
+
 				--highlight: #F00066;
+				--highlight-shade: #BE0051;
+
 				--focus: dodgerblue;
+				--hover: var( --highlight );
+
+				--shadow: rgba( 55,82,0 , 0.3 );
 			}
 
 			/* -------------------------------------------------- */
@@ -28,16 +37,11 @@
 				padding: 1em;
 				margin: 0;
 
-				min-height: 100vh;
-				display: flex;
-				flex-flow: column nowrap;
-				justify-content: center;
-
-				font-size: clamp( 0.8em , calc( 1.16vw + 0.56em ) , 1.5em );
+				font-size: clamp( 0.8em , calc( 1.16vw + 0.56em ) , 1.5em ); /* 0.8em @ 20em / 1.5em @ 80em */
 				font-family: -apple-system , BlinkMacSystemFont , 'Segoe UI' , Roboto , Oxygen-Sans , Ubuntu , Cantarell , sans-serif;
 				line-height: 1.5;
 
-				background: var( --background );
+				background: linear-gradient( -30deg , var( --background-alt ) , var( --background ) ) fixed;
 				color: var( --text );
 			}
 
@@ -58,6 +62,31 @@
 
 			/* -------------------------------------------------- */
 
+			a
+			{
+				display: inline-block;
+
+				color: inherit;
+				outline: 0 solid transparent;
+
+				transition: all 100ms ease;
+			}
+
+			a:hover
+			{
+				background: var( --hover );
+				color: white;
+				outline: 0.2rem solid var( --hover );
+				border-radius: 0.1rem;
+			}
+
+			a:hover code
+			{
+				background: transparent;
+			}
+
+			/* -------------------------------------------------- */
+
 			button,
 			input
 			{
@@ -71,7 +100,7 @@
 
 			input
 			{
-				min-width: calc( 2.5em + 20px );
+				min-width: calc( 2em + 20px );
 				width: 100%;
 
 				padding: 0.5rem;
@@ -85,11 +114,41 @@
 			code
 			{
 				display: inline-block;
-				padding: 1rem 1.5rem;
+				padding: 0 0.3em;
 
 				background: white;
-				box-shadow: inset 0.1rem 0.2rem 0.3rem rgba( 0,0,0 , 0.2 );
 				border-radius: 0.3rem;
+			}
+
+			a code
+			{
+				text-decoration: underline;
+				color: inherit;
+			}
+
+			pre
+			{
+				/* Because otherwise the shadow gets cropped */
+				padding-bottom: 0.5rem;
+			}
+
+			pre code
+			{
+				padding: 1rem 1.5rem;
+				box-shadow: 0.1rem 0.2rem 0.2rem var( --shadow );
+			}
+
+			/* -------------------------------------------------- */
+
+			figure
+			{
+				margin-left: 0;
+				margin-right: 0;
+			}
+
+			figcaption
+			{
+				font-size: 0.7em;
 			}
 
 			/* -------------------------------------------------- */
@@ -102,11 +161,12 @@
 
 				background: var( --highlight );
 				color: white;
+				font-weight: bold;
 
 				box-shadow:
-					0.05rem 0.1rem 0 #BE0051,
-					0.10rem 0.2rem 0 #BE0051,
-					0.15rem 0.3rem 0.2rem rgba( 0,0,0 , 0.2 );
+					0.05rem 0.1rem 0 var( --highlight-shade ),
+					0.10rem 0.2rem 0 var( --highlight-shade ),
+					0.2rem 0.4rem 0.2rem var( --shadow );
 
 				transform: translate( -0.1rem , -0.2rem );
 
@@ -122,9 +182,9 @@
 				transform: translate( -0.15rem , -0.3rem );
 
 				box-shadow:
-					0.075rem 0.15rem 0 #BE0051,
-					0.150rem 0.30rem 0 #BE0051,
-					0.3rem 0.6rem 0.2rem rgba( 0,0,0 , 0.2 );
+					0.075rem 0.15rem 0 var( --highlight-shade ),
+					0.150rem 0.30rem 0 var( --highlight-shade ),
+					0.3rem 0.6rem 0.2rem var( --shadow );
 
 				transition-duration: 50ms;
 
@@ -138,9 +198,9 @@
 				transform: translate( 0 , 0 );
 
 				box-shadow:
-					0 0 0 #BE0051,
-					0 0 0 #BE0051,
-					0.1rem 0.2rem 1px rgba( 0,0,0 , 0.2 );
+					0 0 0 var( --highlight-shade ),
+					0 0 0 var( --highlight-shade ),
+					0.1rem 0.2rem 1px var( --shadow );
 
 				transition-duration: 10ms;
 			}
@@ -169,7 +229,7 @@
 				background: var( --text );
 				color: white;
 
-				box-shadow: 0.2rem 0.4rem 0.2rem rgba( 0,0,0 , 0.2 );
+				box-shadow: 0.2rem 0.4rem 0.2rem var( --shadow );
 				border-radius: 0.3rem;
 			}
 
@@ -199,13 +259,19 @@
 
 			/* -------------------------------------------------- */
 
+			.results pre
+			{
+				margin: 0;
+				white-space: pre-wrap;
+			}
+
 			@media screen and ( min-width: 20em )
 			{
 				.results
 				{
 					display: flex;
 					flex-flow: row nowrap;
-					gap: 1rem;
+					gap: 0.5rem;
 
 					align-items: flex-start;
 				}
@@ -217,6 +283,8 @@
 			}
 
 			/* -------------------------------------------------- */
+
+			/* Stack the inert/active indicators */
 
 			.feedback { display: inline-grid; }
 
@@ -244,6 +312,23 @@
 
 			/* -------------------------------------------------- */
 
+			.graph
+			{
+				overflow: auto;
+			}
+
+			.graph_line
+			{
+				color: var( --highlight );
+			}
+
+			.graph_ref
+			{
+				opacity: 0.25;
+			}
+
+			/* -------------------------------------------------- */
+
 		</style>
 
 	</head>
@@ -252,46 +337,74 @@
 
 		<main>
 
-			<h1>clampcalc</h1>
-			<p>Generate CSS clamp values to transition between two sizes at specific viewport widths. Check out the <a href="https://github.com/nickpearson-uoy/clampcalc">clampcalc GitHub repo</a> for more details.</p>
+			<h1>Clampcalc</h1>
+			<p>Generate CSS clamp values to transition between two sizes at specific viewport widths. JS and Sass functions available on <a href="https://github.com/nickpearson-uoy/clampcalc">GitHub</a>, demo available on <a href="https://codepen.io/nickpearson-uoy/pen/oNQdzmp">CodePen</a>.</p>
 
 			<div id="calculator">
+
 				<h2>Parameters</h2>
 				<form class="form">
 
 					<label class="field">
-						<div class="label"><abbr title="Lower size">Ls</abbr></div>
-						<div class="input"><input name="Ls" class="ls_input" type="number"> em</div>
+						<div class="label"><abbr title="Size at lower viewport width">Ls</abbr></div>
+						<div class="input"><input name="Ls" value="2" class="ls_input" type="number"> em</div>
 					</label>
 
 					<span class="separator">@</span>
 
 					<label class="field">
 						<div class="label"><abbr title="Lower viewport width">Lvw</abbr></div>
-						<div class="input"><input name="Lvw" class="lvw_input" type="number"> em</div>
+						<div class="input"><input name="Lvw" value="20" min="0" class="lvw_input" type="number"> em</div>
 					</label>
 
 					<span class="separator">/</span>
 
 					<label class="field">
-						<div class="label"><abbr title="Upper size">Us</abbr></div>
-						<div class="input"><input name="Us" class="us_input" type="number"> em</div>
+						<div class="label"><abbr title="Size at upper viewport width">Us</abbr></div>
+						<div class="input"><input name="Us" value="5" class="us_input" type="number"> em</div>
 					</label>
 
 					<span class="separator">@</span>
 
 					<label class="field">
 						<div class="label"><abbr title="Upper viewport width">Uvw</abbr></div>
-						<div class="input"><input name="Uvw" class="uvw_input" type="number"> em</div>
+						<div class="input"><input name="Uvw" value="80" min="0" class="uvw_input" type="number"> em</div>
 					</label>
 
 				</form>
+
 				<h2>Result</h2>
-				<p class="results">
-					<code class="output">clamp( Lsem , calc( Avw + Bem ) , Usem )</code>
+				<div class="results">
+					<pre><code class="output">clamp( Lsem , calc( Avw + Bem ) , Usem )</code></pre>
 					<button class="copy">Copy <span class="feedback" aria-hidden><span class="inert">📋</span><span class="active">👍</span></span></button>
-				</p>
+				</div>
+
 			</div>
+
+			<h2>Wut?</h2>
+
+			<p>So you know <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/clamp"><code>clamp</code></a>, right? Give it a minimum size, a maximum size plus a preferred size and it'll use the preferred size where it can, limiting the size to the minimum and maximum values you give it. Cool 😎.</p>
+			<p>It's a fab way to scale text or spacing (or anything else) based on the width of the viewport but without going too small on tiny devices or too big on big ol' desktop monitors. What <code>clamp</code> doesn't explictly do is let you specify at what viewport widths you want the size to be at the minimum and maximum. Clampcalc's purpose is to let you do just that.</p>
+
+			<p><strong>Caveat:</strong> Clampcalc does everything in <code>em</code>.</p>
+
+			<h3>Explanatory ASCII-art graph:</h3>
+
+			<figure>
+				<pre class="graph"><code>Size
+ ↑
+ ¦                  <span class="graph_line">— — — — — — — —</span> <abbr title="Size at upper viewport width">Us</abbr>
+ ¦                <span class="graph_line">/</span><span class="graph_ref">¦</span>
+ ¦             <span class="graph_line">/</span>   <span class="graph_ref">¦</span>
+ ¦          <span class="graph_line">/</span>      <span class="graph_ref">¦</span>
+ ¦<span class="graph_line">— — — — —</span> <span class="graph_ref">- - - -¦- - - - - - - -</span> <abbr title="Size at lower viewport width">Ls</abbr>
+ ¦         <span class="graph_ref">¦</span>       <span class="graph_ref">¦</span>
+-¦--------------------------------> Viewport width
+          <abbr title="Lower viewport width">Lvw</abbr>     <abbr title="Upper viewport width">Uvw</abbr></code></pre>
+				<figcaption>
+					<p><span aria-hidden>&uarr;</span> The computed value of a Clampcalc-generated <code>clamp</code> as a function of viewport width.</p>
+				</figcaption>
+			</figure>
 
 		</main>
 
@@ -319,6 +432,8 @@
 				var us  = $us_input.value;
 				var uvw = $uvw_input.value;
 
+				save_values();
+
 				$output.innerHTML = clampcalc( ls , lvw , us , uvw );
 			}
 
@@ -333,6 +448,38 @@
 				clearTimeout( timeout );
 
 				timeout = setTimeout( function(){ $feedback.classList.remove( 'confirm' ); } , 3000 );
+			}
+
+			// --------------------------------------------------
+
+			function save_values()
+			{
+				try
+				{
+					localStorage.setItem( 'has_saved_values' , true );
+
+					localStorage.setItem( 'ls'  , $ls_input.value  );
+					localStorage.setItem( 'lvw' , $lvw_input.value );
+					localStorage.setItem( 'us'  , $us_input.value  );
+					localStorage.setItem( 'uvw' , $uvw_input.value );
+				}
+				catch( error ){}
+			}
+
+			// --------------------------------------------------
+
+			function set_initial_values()
+			{
+				try
+				{
+					if( !localStorage.getItem( 'has_saved_values' ) ) return;
+
+					$ls_input.value  = localStorage.getItem( 'ls'  );
+					$lvw_input.value = localStorage.getItem( 'lvw' );
+					$us_input.value  = localStorage.getItem( 'us'  );
+					$uvw_input.value = localStorage.getItem( 'uvw' );
+				}
+				catch( error ){}
 			}
 
 			// --------------------------------------------------
@@ -357,6 +504,7 @@
 			var timeout = null;
 
 			// Initial state
+			set_initial_values();
 			update();
 
 			// Add a listener for any updates to inputs inside the calculator

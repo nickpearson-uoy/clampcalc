@@ -2,20 +2,21 @@
 
 Generate CSS clamp values to transition between two sizes at specific viewport widths.
 
-Check out the online calculator: [https://clampcalc.netlify.app](https://clampcalc.netlify.app)
+Check out the [online calculator](https://clampcalc.netlify.app) and the [CodePen demo](https://codepen.io/nickpearson-uoy/pen/oNQdzmp).
 
 ## Wut?
 
-So you know [`clamp`](https://developer.mozilla.org/en-US/docs/Web/CSS/clamp), right? Give it a minimum size, a maximum size plus a preferred size and it'll use the preferred size where it can, limiting the size to the minimum and maximum values you give it.
 
-It's a fab way to scale text or spacing (or anything else) based on the width of the viewport but without going too small on tiny devices or too big on big ol' desktop monitors. What `clamp` doesn't do is let you specify at what viewport widths you want the size to be at the minimum and maximum. Clampcalc lets you do that.
+So you know [`clamp`](https://developer.mozilla.org/en-US/docs/Web/CSS/clamp), right? Give it a minimum size, a maximum size plus a preferred size and it'll use the preferred size where it can, limiting the size to the minimum and maximum values you give it. Cool 😎.
 
-⚠ **Caveat:** clampcalc does everything in `em`.
+It's a fab way to scale text or spacing (or anything else) based on the width of the viewport but without going too small on tiny devices or too big on big ol' desktop monitors. What `clamp` doesn't explictly do is let you specify at what viewport widths you want the size to be at the minimum and maximum. Clampcalc's purpose is to let you do just that.
 
-Explanatory ASCII-art graph:
+**Caveat:** Clampcalc does everything in `em`.
+
+### Explanatory ASCII-art graph:
 
 ```
-Size (em)
+Size
  ↑
  ¦                  — — — — — — — — Us
  ¦                /·
@@ -23,10 +24,12 @@ Size (em)
  ¦          /      ·
  ¦— — — — —  ·  ·  ·  ·  ·  ·  ·  · Ls
  ¦         ·       ·
--¦--------------------------------> Viewport width (em)
+-¦--------------------------------> Viewport width
            ·       ·
           Lvw     Uvw
 ```
+
+&uarr; The computed value of a Clampcalc-generated `clamp` as a function of viewport width.
 
 | Variable | Description                  |
 |----------|------------------------------|
@@ -39,26 +42,25 @@ Size (em)
 
 ### Online
 
-[https://clampcalc.netlify.app](https://clampcalc.netlify.app)
-
-For one-offs or infrequent use - pop in your paramters and copy/paste your `clamp` value.
+[https://clampcalc.netlify.app](https://clampcalc.netlify.app): for one-offs or infrequent use - pop in your paramters and copy/paste your `clamp` value.
 
 ### In your own project
 
-⚠ Clampcalc isn't published on npm right now but I promise it will if anyone asks for it. In the meantime, here's what it would look like.
+Clampcalc isn't published on npm right now but I promise it will be if there's any significant demand for it.
 
-Using npm:
+In the meantime, you can grab the [JavaScript](clampcalc.js) or [Sass](clampcalc.scss) files containing the `clampcalc` function from this repo and copy them into your project.
 
-```
-$ npm install clampcalc --save
-```
-In your code:
+#### JavaScript
 
 ```
-var clampcalc = require( 'clampcalc' );
+element.style.fontSize = clampcalc( 2 , 20 , 6 , 80 );
+```
 
-console.log( clampcalc( 2 , 20 , 6 , 80 ) );
+#### Sass
 
-// Output: clamp( 2em , calc( 6.66vw + 0.66em ) , 6em )
-
+```
+.element
+{
+	font-size: clampcalc( 2 , 20 , 6 , 80 );
+}
 ```
