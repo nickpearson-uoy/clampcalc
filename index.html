@@ -69,7 +69,12 @@
 				color: inherit;
 				outline: 0 solid transparent;
 
-				transition: all 100ms ease;
+				border-radius: 0.1rem;
+
+				transition:
+					background-color 100ms ease,
+					color 100ms ease,
+					outline 100ms ease;
 			}
 
 			a:hover
@@ -77,7 +82,6 @@
 				background: var( --hover );
 				color: white;
 				outline: 0.2rem solid var( --hover );
-				border-radius: 0.1rem;
 			}
 
 			a:hover code
@@ -146,9 +150,37 @@
 				margin-right: 0;
 			}
 
+			figure img,
+			figure svg
+			{
+				box-shadow: 0.2rem 0.4rem 0.2rem var( --shadow );
+				border-radius: 0.3rem;
+			}
+
 			figcaption
 			{
 				font-size: 0.7em;
+			}
+
+			/* -------------------------------------------------- */
+
+			dl
+			{
+				display: grid;
+				grid-template-columns: max-content 1fr;
+				gap: 0.5em;
+			}
+
+			dt
+			{
+				text-align: right;
+				grid-column-start: 1;
+			}
+
+			dd
+			{
+				margin: 0;
+				grid-column-start: 2;
 			}
 
 			/* -------------------------------------------------- */
@@ -271,14 +303,19 @@
 				{
 					display: flex;
 					flex-flow: row nowrap;
-					gap: 0.5rem;
+					gap: 1em;
 
 					align-items: flex-start;
 				}
 
-				.output
+				.results pre
 				{
 					flex-grow: 1;
+				}
+
+				.results pre code
+				{
+					display: block;
 				}
 			}
 
@@ -342,7 +379,7 @@
 
 			<div id="calculator">
 
-				<h2>Parameters</h2>
+				<h2>Enter your parameters</h2>
 				<form class="form">
 
 					<label class="field">
@@ -388,23 +425,133 @@
 
 			<p><strong>Caveat:</strong> Clampcalc does everything in <code>em</code>.</p>
 
-			<h3>Explanatory ASCII-art graph:</h3>
+			<h3>Explanatory graph</h3>
 
 			<figure>
-				<pre class="graph"><code>Size
- ↑
- ¦                  <span class="graph_line">— — — — — — — —</span> <abbr title="Size at upper viewport width">Us</abbr>
- ¦                <span class="graph_line">/</span><span class="graph_ref">¦</span>
- ¦             <span class="graph_line">/</span>   <span class="graph_ref">¦</span>
- ¦          <span class="graph_line">/</span>      <span class="graph_ref">¦</span>
- ¦<span class="graph_line">— — — — —</span> <span class="graph_ref">- - - -¦- - - - - - - -</span> <abbr title="Size at lower viewport width">Ls</abbr>
- ¦         <span class="graph_ref">¦</span>       <span class="graph_ref">¦</span>
--¦--------------------------------> Viewport width
-          <abbr title="Lower viewport width">Lvw</abbr>     <abbr title="Upper viewport width">Uvw</abbr></code></pre>
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+
+					<title>The computed value of a Clampcalc-generated clamp as a function of viewport width.</title>
+
+					<style>
+
+						.chart
+						{
+							font-size: 1rem;
+							font-family: -apple-system , BlinkMacSystemFont , 'Segoe UI' , Roboto , Oxygen-Sans , Ubuntu , Cantarell , sans-serif;
+						}
+
+						.axis_line
+						{
+							stroke: #47008F;
+							stroke-width: 2;
+						}
+
+						.axis_arrow
+						{
+							fill: #47008F;
+							stroke: #47008F;
+							stroke-width: 2;
+						}
+
+						.axis_label
+						{
+							fill: #47008F;
+						}
+
+						.value_line
+						{
+							stroke: #B0B0B0;
+							stroke-width: 2;
+							stroke-dasharray: 8;
+						}
+
+						.value_label
+						{
+							fill: #F00066;
+							font-size: 150%;
+						}
+
+						.value_label_underline
+						{
+							stroke: #F00066;
+							stroke-width: 2;
+							stroke-dasharray: 3;
+						}
+
+						.size_line
+						{
+							stroke: #F00066;
+							fill: none;
+							stroke-width: 2;
+						}
+
+						.size_dot
+						{
+							fill: #F00066;
+						}
+
+					</style>
+
+					<rect x="0" y="0" width="100%" height="100%" fill="white"/>
+
+					<g class="chart" transform="translate( 60 25 )">
+
+						<g class="values">
+							<line class="value_line" x1="200" y1="225" x2="200" y2="325"/>
+							<text class="value_label" text-anchor="middle" dominant-baseline="middle" x="200" y="345">Lvw<title>Lower viewport width</title></text>
+							<line class="value_label_underline" x1="180" y1="357" x2="220" y2="357"/>
+
+							<line class="value_line" x1="500" y1="25" x2="500" y2="325"/>
+							<text class="value_label" text-anchor="middle" dominant-baseline="middle" x="500" y="345">Uvw<title>Upper viewport width</title></text>
+							<line class="value_label_underline" x1="480" y1="357" x2="520" y2="357"/>
+
+							<line class="value_line" x1="175" y1="250" x2="675" y2="250"/>
+							<text class="value_label" text-anchor="middle" dominant-baseline="middle" x="695" y="250">Ls<title>Size at lower viewport width</title></text>
+							<line class="value_label_underline" x1="685" y1="262" x2="705" y2="262"/>
+
+							<line class="value_line" x1="475" y1="50" x2="675" y2="50"/>
+							<text class="value_label" text-anchor="middle" dominant-baseline="middle" x="695" y="50">Us<title>Size at upper viewport width</title></text>
+							<line class="value_label_underline" x1="685" y1="62" x2="705" y2="62"/>
+						</g>
+
+						<g class="sizes">
+							<polyline class="size_line" points="0,250 200,250 500,50 650,50"/>
+							<circle class="size_dot" cx="200" cy="250" r="5"/>
+							<circle class="size_dot" cx="500" cy="50" r="5"/>
+						</g>
+
+						<g class="axes">
+							<line class="axis_line" x1="0" y1="325" x2="0" y2="0"/>
+							<text class="axis_label" text-anchor="middle" dominant-baseline="middle" transform="rotate( -90 -25 150 )" x="-25" y="150">Computed size</text>
+							<polyline class="axis_arrow" points="-4,10 0,0 4,10"/>
+
+							<line class="axis_line" x1="-25" y1="300" x2="650" y2="300"/>
+							<text class="axis_label" text-anchor="middle" dominant-baseline="middle" x="350" y="325">Viewport width</text>
+							<polyline class="axis_arrow" points="640,296 650,300 640,304"/>
+						</g>
+
+					</g>
+
+				</svg>
+
 				<figcaption>
-					<p><span aria-hidden>&uarr;</span> The computed value of a Clampcalc-generated <code>clamp</code> as a function of viewport width.</p>
+					<p>&uarr; The computed value of a Clampcalc-generated <code>clamp</code> as a function of viewport width.</p>
 				</figcaption>
+
 			</figure>
+
+			<h3>Parameter definitions</h3>
+
+			<dl>
+				<dt><code>Ls</code></dt>
+				<dd>Computed size at the lower viewport width and below.</dd>
+				<dt><code>Lvw</code></dt>
+				<dd>Lower viewport width.</dd>
+				<dt><code>Us</code></dt>
+				<dd>Computed size at the upper viewport width and above.</dd>
+				<dt><code>Uvw</code></dt>
+				<dd>Upper viewport width.</dd>
+			</dl>
 
 		</main>
 
