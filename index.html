@@ -10,6 +10,7 @@
 
 		<style>
 
+
 			/* -------------------------------------------------- */
 
 			:root
@@ -37,7 +38,7 @@
 				padding: 1em;
 				margin: 0;
 
-				font-size: clamp( 0.8em , calc( 1.16vw + 0.56em ) , 1.5em ); /* 0.8em @ 20em / 1.5em @ 80em */
+				font-size: clamp( 1em , calc( 1.42vw + 0.71em ) , 2em ); /* 1em @ 20em / 1.5em @ 70em */
 				font-family: -apple-system , BlinkMacSystemFont , 'Segoe UI' , Roboto , Oxygen-Sans , Ubuntu , Cantarell , sans-serif;
 				line-height: 1.5;
 
@@ -45,12 +46,23 @@
 				color: var( --text );
 			}
 
+			p, h1, h2, h3,
+			pre, figure, dl
+			{
+				margin: 2rem 0;
+			}
+
+			h1, h2, h3
+			{
+				margin-top: 3rem ;
+			}
+
 			/* -------------------------------------------------- */
 
 			main
 			{
 				width: 100%;
-				max-width: 36em;
+				max-width: 33em;
 				margin: 0 auto;
 			}
 
