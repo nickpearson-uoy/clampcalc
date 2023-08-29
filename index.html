@@ -10,15 +10,12 @@
 
 		<style>
 
-
 			/* -------------------------------------------------- */
 
 			:root
 			{
 				--background: #a5f800;
 				--background-alt: #DDFF33;
-				--background: #e8e8e8;
-				--background-alt: #e8e8e8;
 
 				--text: #47008F;
 
@@ -303,6 +300,8 @@
 				padding: 0.2rem 0;
 			}
 
+			.form + p { margin-top: 0.5rem; }
+
 			/* -------------------------------------------------- */
 
 			.results pre
@@ -424,6 +423,8 @@
 
 				</form>
 
+				<p><small>See the <a href="#explanatory_graph">explanatory graph</a> and <a href="#parameter_definitions">parameter definitions</a> below.</small></p>
+
 				<h2>Result</h2>
 				<div class="results">
 					<pre><code class="output">clamp( Lsem , calc( Avw + Bem ) , Usem )</code></pre>
@@ -439,7 +440,7 @@
 
 			<p><strong>Caveat:</strong> Clampcalc does everything in <code>em</code>.</p>
 
-			<h3>Explanatory graph</h3>
+			<h3 id="explanatory_graph">Explanatory graph</h3>
 
 			<figure>
 				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
@@ -554,7 +555,7 @@
 
 			</figure>
 
-			<h3>Parameter definitions</h3>
+			<h3 id="parameter_definitions">Parameter definitions</h3>
 
 			<dl>
 				<dt><code>Ls</code></dt>
